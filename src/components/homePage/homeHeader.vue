@@ -100,7 +100,7 @@
     position: relative;
     width: 182px;
     height: 100px;
-    background: red;
+    background: #0b0f1a;
     z-index: 901;
     top: -38px;
     visibility: hidden;
