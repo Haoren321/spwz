@@ -12,7 +12,9 @@
             </a>
             <a id="register" @click="register" style="color:#d9dadd;">注册</a>
         </div>
-        <div id="userLogin">
+        <div id="userLogin" v-if="isHidden === true">
+            <Avatar :src="'/api/'+user.userIcon"/> 
+            <span>{{user.userName}}</span>
         </div>
         <Modal 
         v-model="login"
@@ -57,6 +59,13 @@
     padding: 0;
     margin: 0;    
 }
+#userLogin{
+    margin-left: 6%;
+}
+#userLogin>span{
+    margin-left: 8px;
+    font-weight: 500;
+}
 </style>
 <script>
 import loginTem from "../homePage/login"
@@ -88,7 +97,7 @@ export default {
         },
         getUserInfo(userInfo){
             this.user = userInfo;
-            console.log(this.user.userName);
+            console.log(this.user);
         },
         aa(){
             console.log(this.isHidden);
