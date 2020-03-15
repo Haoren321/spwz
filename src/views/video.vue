@@ -52,6 +52,7 @@
               <Button type="primary" @click="openModal" size="small">登录</Button>后再评论~
             </div>
             <div class="xhx"></div>
+            <p v-if="comment == ''">还没有评论~</p>
             <div class="commentItem" v-for="(item,index) in comment" v-bind:key="index">
               <div class="commentContent">
                 <a :href="'/visitorSpace/'+item.userId">{{item.userName}}</a>
@@ -330,7 +331,7 @@ export default {
     return {
       videoInfo: "",
       isFocus: false,
-      comment: "",
+      comment: [],
       defaultText: "",
       commentItem: "",
       commentChildItem: "",
@@ -352,11 +353,10 @@ export default {
     let path = this.$route.path;
     let itemArray = path.split("/");
     this.initVideo(itemArray[2]);
-    this.getComment();
     //console.log(this.$store.state.user);
   },
   methods: {
-    initVideo(sv_id) {
+    async initVideo(sv_id) {
       let videoInfo = new FormData();
       videoInfo.append("code", "initVideo");
       videoInfo.append("sv_id", sv_id);
@@ -366,7 +366,7 @@ export default {
         url: "/api/controller/svideoCtro.php"
       }).then(res => {
         this.videoInfo = res.data[0];
-        console.log(this.videoInfo);
+        this.getComment();
       });
     },
     getFocus(foucsId, beFoucsId) {
@@ -431,8 +431,14 @@ export default {
       });
     },
     getComment() {
+      let getCommentFD = new FormData();
+      let filePath = this.videoInfo.cover_img.split("/");
+      getCommentFD.append("code","getComment");
+      getCommentFD.append("filePath",filePath[3]+"/"+ filePath[4]);
+      console.log(filePath[3]+"/"+ filePath[4])
       this.$axios({
         method: "post",
+        data:getCommentFD,
         url: "/api/controller/comment.php"
       }).then(res => {
         this.comment = res.data;
@@ -482,6 +488,7 @@ export default {
         };
         this.comment[this.commentIndex].reply.splice(0, 0, newComment);
         this.commentItem.status = "false";
+        this.sendComment();
         return;
       }
       if (!this.commentChildItem) {
@@ -501,11 +508,11 @@ export default {
         console.log(this.comment);
         this.comment[this.commentIndex].reply.splice(0, 0, newComment);
         this.commentItem.status = "false";
+        this.sendComment();
         return;
       }
     },
     fristCommentSubmit() {
-      this.sendComment();
       if (this.firstCommentText == "") {
         return this.$Message.error("您还没有评论");
       }
@@ -522,9 +529,15 @@ export default {
         status:false,
         reply: []
       };
+      if(this.comment == ""){
+        this.comment = [newComment];
+        this.sendComment();
+        return;
+      }
       this.comment.splice(0, 0, newComment);
       this.firstCommentText = "";
       this.commentItem.status = "false";
+      this.sendComment();
       return;
     },
     sendComment(){
@@ -532,7 +545,7 @@ export default {
       let commentFD = new FormData();
       commentFD.append("code","saveComment");
       commentFD.append("filePath",filePath[3]+"/"+ filePath[4]);
-      commentFD.append("commentJson",this.comment);
+      commentFD.append("commentJson",JSON.stringify(this.comment));
       this.$axios({
         method:'post',
         data:commentFD,
