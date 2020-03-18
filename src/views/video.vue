@@ -356,7 +356,7 @@ export default {
     //console.log(this.$store.state.user);
   },
   methods: {
-    async initVideo(sv_id) {
+    initVideo(sv_id) {
       let videoInfo = new FormData();
       videoInfo.append("code", "initVideo");
       videoInfo.append("sv_id", sv_id);
@@ -392,6 +392,9 @@ export default {
         this.$refs.headerChild._data.registerModal = false;
         console.log(this.$refs.headerChild._data);
       } else {
+        if(this.$store.state.user.userId == this.videoInfo.userId){
+          return this.$Message.error("不能关注自己");
+        }
         let foucsId = this.$store.state.user.userId;
         let beFoucsId = this.videoInfo.userId;
         let beFoucsName = this.videoInfo.userName;

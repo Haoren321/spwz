@@ -1,192 +1,138 @@
-/*
-初始化通道（chanel），初始化弹幕池dmPool，建立弹幕缓存区
-*/
-const MAX_CHANEL_COUNT = 10;
-const MAX_CHANEL = 6;
-
+const MAX_CHANEL = 10;
+var dmIndex = 0;
 class dmClass {
     constructor({
         speed = 8,
         wrapper,
-        dmPool
+        dm
     }) {
-        //弹幕池，用于存储所有弹幕
-        this.dmPool = dmPool;
-        //dom池
-        this.dmBuff = [];
-        //即将发送的弹幕
-        this.domShootWill = [];
-        //通道是否空闲
-        this.hasPositin = [];
-        //弹幕发送速率
+        this.dm = dm.slice(); //弹幕
+        this.wrapper = wrapper; //父容器，展示弹幕的div
+        this.dmPool = [];
+        this.unLoadDm = [];//已发送的弹幕
+        this.domObject;
+        this.domObjectArray = [];
         this.speed = speed;
-        //弹幕的父容器
-        this.wrapper = wrapper;
-        //暂停
-        this.pause = false;
-        //正在发送的弹幕
-        this.shootNow = {
-            doms: [],
-            time: []
-        };
+        this.hasLock = new Array(MAX_CHANEL).fill(false);
+        this.currentDm = new Array(MAX_CHANEL);
+        for (let i = 0; i < 10; i++) {
+            this.currentDm[i] = new Array();
+        }
     }
-    //初始化dom对象
-    initDom(i) {
+    updataDm(time) {
+        if (this.dm.length <= dmIndex) {
+            return;
+        }
+        let data = new Array();
+        for (let i = this.dm[dmIndex].time; time <= i && i < time + 0.5 && dmIndex < this.dm.length; dmIndex++) {
+            data.push(this.dm[dmIndex].data);
+            i = this.dm[dmIndex].time;
+        }
+        if (data.length) {
+            this.fillDm(data);
+        }
+        //console.log(dmIndex);
+        //console.log(this.currentDm);
+        //console.log(this.currentDm);
+    }
+    initDom(i, callback) {
         let dom = document.createElement('div');
+        dom.innerText = "heihei";
         dom.style.cssText = `
-            position: absolute;
-            top: ${i * 30}px;
-            right:0;
-            white-space: nowrap;
-            user-select: none;
-            color: #fff;
-        `;
-        dom.play = function () { };
-        return dom;
+        position: absolute;
+        top: ${i * 30}px;
+        right:0;
+        white-space: nowrap;
+        user-select: none;
+        color: #fff;
+        transform: translateX(0px);
+        transition: transform ${this.speed}s linear 0s;
+    `;
+        let domObj = {
+            dom: dom,
+            startTime: new Date().getTime(),
+            suspend: new Date().getTime(),
+            runningTime: 0,
+            chanal:i
+        }
+        dom.addEventListener('transitionend', () => {
+            dom.style.transition = `none`;
+            dom.style.transform = `translateX(0px)`;
+            this.domObjectArray.push(domObj);
+            this.currentDm[i].shift();
+            this.hasLock[i] = false;
+        })
+        this.wrapper.appendChild(dom);
+        callback(domObj);
+        return domObj;
     }
-    //初始化弹幕缓冲区，利用transitionend实现dom对象的复用
-    initDmBuff() {
+    fillDm(dataArray) {
+        //console.log(dataArray[0]);
+        while (this.domObjectArray.length && dataArray.length) {
+            let domObject = this.domObjectArray.shift();
+            let dom = domObject.dom;
+            let data = dataArray.shift();
+            dom.innerText = data;
+            let domWidth = dom.offsetWidth;
+            dom.style.right = `-${domWidth}px`;
+            dom.style.transition = `transform ${this.speed}s linear`;
+            dom.style.transform = `translateX(-${this.wrapper.clientWidth}px)`;
+            domObject.startTime = new Date().getTime(),
+            domObject.suspend = new Date().getTime();
+            domObject.runningTime = 0;
+            this.currentDm[domObject.chanal].push(domObject);
+        }
+        while (dataArray.length) {
+            let i = this.getChanal();
+            let domObject = this.initDom(i, (dom) => {
+                let setms = setInterval(() => {
+                    domObject.dom.style.transform = `translateX(-${this.wrapper.clientWidth}px)`;
+                    clearInterval(setms);
+                }, 1);
+                //console.log(dom)
+            });
+            //console.log(dom);
+            let data = dataArray.shift();
+            domObject.dom.innerText = data;
+            let domWidth = domObject.dom.offsetWidth;
+            domObject.dom.style.right = `-${domWidth}px`;
+            this.currentDm[i].push(domObject);
+            //;
+        }
+    }
+    getChanal() {
+        //console.log(this.hasLock[0]);
         for (let i = 0; i < MAX_CHANEL; i++) {
-            let doms = [];
-            for (let j = 0; j < MAX_CHANEL_COUNT; j++) {
-                let dom = this.initDom(i);
-                this.wrapper.appendChild(dom);
-                doms.push(dom);
-                dom.addEventListener('transitionend', () => {
-                    dom.style.cssText = `
-                    position: absolute;
-                    top: ${i * 30}px;
-                    right:0;
-                    white-space: nowrap;
-                    user-select: none;
-                    color: #fff;
-                    `;
-                    this.dmBuff[i].push(dom);
-                    this.shootNow.doms.shift();
-                    this.shootNow.time.shift();
-                })
-            }
-            this.dmBuff[i] = doms;
-            this.hasPositin[i] = true;
-            //console.log(this.wrapper);
-        }
-    }
-    //将弹幕以时间为组来发送
-    intervalInsert(time) {
-        //let chanel = this.getChanel();
-        //console.log(this.dmPool);
-        if (this.dmPool.length) {
-            let flag = true;
-            while (this.dmPool.length && flag) {
-                if(this.dmPool[0].time + 1 < time){
-                    this.dmPool.shift();
-                    continue;
-                }
-                if (this.dmPool[0].time <= time && this.dmPool[0].time >= time - 1) flag = false;
-                if (!flag) this.domShootWill.push(this.dmPool.shift());
-                //console.log(this.dmPool)
-                flag = !flag;
-            }
-        }
-        if (this.domShootWill.length) this.shootDm();
-        return -1;
-    }
-    shootDm() {
-        if (!this.pause) {
-            let mar_left = 0;
-            while (this.domShootWill.length) {
-                let position = this.getChanel();
-                if (position != -1) {
-                    let dom = this.dmBuff[position].shift();
-                    dom.innerText = this.domShootWill[0].data;
-                    //console.log(doms);
-                    dom.style.transition = `transform 8s linear`;
-                    dom.style.transform = `translateX(-${this.wrapper.clientWidth}px)`;
-                    dom.style.right = `-${mar_left}px`;
-                    this.shootNow.doms.push(dom);
-                    this.shootNow.time.push(this.domShootWill[0].time);
-                    this.domShootWill.shift();
-                    if (position < MAX_CHANEL && !this.hasPositin[position + 1])
-                        this.hasPositin[position + 1] = true;
-                    if (position === MAX_CHANEL - 1) {
-                        mar_left = mar_left + dom.getBoundingClientRect().width + 10;
-                        //console.log(dom.getBoundingClientRect());
-                        this.hasPositin[0] = true;
-                    }
-                }
-            }
-        }
-    }
-    getChanel() {
-        for (let i = 0; i < MAX_CHANEL; i++) {
-            if (this.hasPositin[i] && this.dmBuff[i].length) {
-                this.hasPositin[i] = false;
+            if (!this.hasLock[i] && this.currentDm[i].length < 4) {
+                this.hasLock[i] = true;
                 return i;
-            }
-        }
-        return -1;
-    }
-    dmPause(pauseTime) {
-        this.pause = true;
-        if (this.shootNow.doms) {
-            let dom;
-            let left;
-            let top;
-            let domWidth;
-            let time;
-            for (let i = 0; i < this.shootNow.doms.length; i++) {
-                /**/
-                dom = this.shootNow.doms[i];
-                time = this.shootNow.time[i];
-                domWidth = dom.clientWidth;
-                //算出弹幕已走的位移
-                left = ((pauseTime - time) / this.speed) * this.wrapper.clientWidth;
-                top = dom.offsetTop;
-                dom.style.cssText = `                    
-                position: absolute;
-                top: ${top}px;
-                right:0;
-                white-space: nowrap;
-                user-select: none;
-                color: #fff;
-                transition: transform 0s linear;
-                transform: translateX(-${left + 10}px);
-                `
+            } else {
+                this.hasLock[i] = true;
             }
         }
     }
-    dmPlay(pauseTime) {
-        this.pause = false;
-        if (this.shootNow.doms.length) {
-            let speedRest;
-            for (let i = 0; i < this.shootNow.doms.length; i++) {
-                let dom = this.shootNow.doms[i];
-                speedRest = this.speed - (pauseTime - this.shootNow.time[i]);
-                dom.style.transition = `transform ${speedRest}s linear`;
-                dom.style.transform = `translateX(-${this.wrapper.clientWidth}px)`;
+    dmPause() {
+        for (let i = 0; i < MAX_CHANEL; i++) {
+            for (let j = 0; j < this.currentDm[i].length; j++) {
+                let dom = this.currentDm[i][j].dom;
+                this.currentDm[i][j].suspend = new Date().getTime();
+                let { top, left } = getComputedStyle(dom);
+                let offsetTime = this.currentDm[i][j].suspend - this.currentDm[i][j].startTime;
+                this.currentDm[i][j].runningTime += offsetTime;
+                let offsetPercent = ((this.currentDm[i][j].runningTime / 1000) / this.speed).toFixed(3);
+                let offsetX = offsetPercent * (left.replace(/px/, ""));
+                dom.style.transition = `none`;
+                dom.style.transform = `translateX(-${offsetX}px`;
             }
         }
     }
-    clearDm() {
-        if (this.shootNow.doms.length) {
-            while (this.shootNow.doms.length) {
-                let dom = this.shootNow.doms.shift();
-                this.shootNow.time.shift();
-                for (let i = 0; i < MAX_CHANEL; i++) {
-                    if (this.dmBuff[i].length < MAX_CHANEL_COUNT) {
-                        this.hasPositin[i] = true;
-                        this.dmBuff[i].push(dom);
-                        break;
-                    }
-                }
-                dom.style.cssText = `
-                position: absolute;
-                top: 0px;
-                right:0;
-                white-space: nowrap;
-                user-select: none;
-                color: #fff;
-                `;
+    dmPlay() {
+        for (let i = 0; i < MAX_CHANEL; i++) {
+            for (let j = 0; j < this.currentDm[i].length; j++) {
+                let dom = this.currentDm[i][j].dom;
+                dom.style.transition = `transform ${this.speed - (this.currentDm[i][j].runningTime) / 1000}s linear`;
+                dom.style.transform = `translateX(-${this.wrapper.clientWidth}px`;
+                this.currentDm[i][j].startTime = new Date().getTime();
             }
         }
     }

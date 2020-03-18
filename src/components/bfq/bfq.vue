@@ -1,13 +1,27 @@
 <template>
   <div id="video-main" style>
     <div id="wrap">
-      <div id="dmk"></div>
+      <div id="dmk">
+        <div class="jzz" v-if="isLoding">
+          <Spin size="large" class="styleJzz">
+            <div class="loader">
+              <svg class="circular" viewBox="25 25 50 50">
+                <circle
+                  class="path"
+                  cx="50"
+                  cy="50"
+                  r="20"
+                  fill="none"
+                  stroke-width="3"
+                  stroke-miterlimit="10"
+                />
+              </svg>
+            </div>
+          </Spin>
+        </div>
+      </div>
       <div id="wrap-video">
-        <video 
-        id="ply" 
-        :poster="'/api/'+video.cover_img"
-        :src="'/api/'+video.source_url" 
-        >
+        <video id="ply" :poster="'/api/'+video.cover_img" :src="'/api/'+video.source_url">
           <p>你的浏览器不支持 HTML5 视频。可点击</p>
         </video>
       </div>
@@ -25,7 +39,7 @@
             v-if="barisshow"
             type="md-arrow-dropdown"
             color="white"
-            :style="{left:jdtposstion-1+'%'}"
+            :style="{left:jdtposstion - 0.7 +'%'}"
           />
           <div id="jdt-container">
             <div id="jdt-per" :style="{width:bfqcontrols.jdtLoad+'%'}"></div>
@@ -36,7 +50,7 @@
             v-if="barisshow"
             type="md-arrow-dropup"
             color="white"
-            :style="{left:jdtposstion-1+'%'}"
+            :style="{left:jdtposstion-0.7 +'%'}"
           />
         </div>
         <div id="video-control">
@@ -145,6 +159,80 @@
   margin: 0px;
   padding: 0px;
 }
+.jzz {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+.styleJzz {
+  background: none;
+}
+@keyframes color {
+  100%,
+  0% {
+    stroke: #7bbae4;
+  }
+  50% {
+    stroke: #123e68;
+  }
+  100% {
+    stroke: #89b3e9;
+  }
+}
+@keyframes dash {
+  0% {
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 89, 200;
+    stroke-dashoffset: -35px;
+  }
+  100% {
+    stroke-dasharray: 89, 200;
+    stroke-dashoffset: -124px;
+  }
+}
+.loader:before {
+  content: "";
+  display: block;
+  padding-top: 100%;
+}
+.loader {
+  margin: 0 auto;
+  width: 80px;
+  position: absolute;
+  display: block;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  -webkit-transform: translate3d(0, -50%, 0);
+  transform: translate3d(0, -50%, 0);
+  text-align: center;
+  top: 50%;
+}
+.circular {
+  -webkit-animation: rotate 2s linear infinite;
+  animation: rotate 2s linear infinite;
+  height: 100%;
+  -webkit-transform-origin: center center;
+  transform-origin: center center;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+}
+.path {
+  stroke-dasharray: 1, 200;
+  stroke-dashoffset: 0;
+  -webkit-animation: dash 1.5s ease-in-out infinite,
+    color 2s ease-in-out infinite;
+  animation: dash 1.5s ease-in-out infinite, color 2s ease-in-out infinite;
+  stroke-linecap: round;
+}
 </style>
 <script>
 import dmClass from "../../common/dmClass";
@@ -161,10 +249,12 @@ export default {
       switchVideo: "play",
       barisshow: false,
       pauseTime: "",
+      isLoding: false,
+      videoobj: "",
       damuk: [
         {
           item: "1",
-          data: "test1",
+          data: "test1test1test1test1test1test1test1test1test1test1test1",
           time: 1
         },
         {
@@ -217,53 +307,66 @@ export default {
       this.openFullscreen(fullscreen);
     },
     initVideo() {
-      var videoobj = $("#ply")[0];
-      var wrap = $("#dmk")[0];
-      this.dminit = new dmClass({
+      this.videoobj = $("#ply")[0];
+      let wrap = $("#dmk")[0];
+      this.dm = new dmClass({
         wrapper: wrap,
-        dmPool: this.damuk.slice()
+        dm: this.damuk
       });
-      this.dminit.initDmBuff();
-      var then = this;
-      //console.log(dminit.intervalInsert(1));
-      videoobj.oncanplay = function() {
-        //console.log(videoobj)
-        //then.outdamuk();
-        videoobj.addEventListener("timeupdate", function() {
-          //console.log(then.dminit.dmPool);
-          var allTime = videoobj.duration;
-          then.bfqcontrols.jdtLoad = (videoobj.buffered.end(0) / allTime) * 100;
-          then.bfqcontrols.jdtNow = (videoobj.currentTime / allTime) * 100;
-          then.pauseTime = videoobj.currentTime;
-          then.dminit.intervalInsert(videoobj.currentTime);
+      //this.dminit.initDmBuff();
+      this.videoobj.oncanplay = () => {
+        this.videoobj.addEventListener("timeupdate", () => {
+          let bufferedIndex = this.videoobj.buffered.length;
+          let allTime = this.videoobj.duration;
+          this.bfqcontrols.jdtLoad =
+            (this.videoobj.buffered.end(bufferedIndex - 1) / allTime) * 100;
+          this.bfqcontrols.jdtNow = (this.videoobj.currentTime / allTime) * 100;
+          this.pauseTime = this.videoobj.currentTime;
+          //this.dminit.intervalInsert(this.videoobj.currentTime);
         });
-        videoobj.addEventListener("ended", function() {
-          then.switchVideo = "play";
-          then.dminit.dmPool = then.damuk.slice();
+        this.videoobj.addEventListener("ended", function() {
+          this.switchVideo = "play";
+          //this.dminit.dmPool = this.damuk.slice();
         });
       };
     },
     playVideo() {
-      var videoobj = $("#ply")[0];
       //this.dminit.dmPool = this.damuk.slice();
-      this.dminit.dmPlay(this.pauseTime);
-      videoobj.play();
+      this.dm.dmPlay();
+      let ct = this.videoobj.currentTime;
+      let dmTime = setInterval(() => {
+        if (this.videoobj.paused) {
+          clearInterval(dmTime);
+        }
+        this.dm.updataDm(ct);
+        ct = ct + 0.5;
+      }, 500);
+      this.videoobj.play();
       this.switchVideo = "stop";
     },
     pauseVideo() {
-      var videoobj = $("#ply")[0];
-      this.dminit.dmPause(this.pauseTime);
-      videoobj.pause();
+      this.dm.dmPause();
+      this.videoobj.pause();
       this.switchVideo = "play";
       //animation-play-state
     },
     udjdt(e) {
-      var videoobj = $("#ply")[0];
-      var then = this;
-      videoobj.currentTime = (this.jdtposstion / 100) * videoobj.duration;
-      videoobj.play();
+      this.videoobj.currentTime =
+        (this.jdtposstion / 100) * this.videoobj.duration;
+      let playPromise = this.videoobj.play();
+      this.isLoding = true;
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            this.videoobj.play();
+            this.isLoding = false;
+          })
+          .catch(res => {
+            console.log(res);
+          });
+      }
       this.dminit.clearDm();
-      this.dminit.dmPool = this.damuk.slice();
+      //this.dminit.dmPool = this.damuk.slice();
       this.switchVideo = "stop";
     },
     showbar(e) {
