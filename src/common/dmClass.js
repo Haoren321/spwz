@@ -1,5 +1,4 @@
 const MAX_CHANEL = 10;
-var dmIndex = 0;
 class dmClass {
     constructor({
         speed = 8,
@@ -8,30 +7,34 @@ class dmClass {
     }) {
         this.dm = dm.slice(); //弹幕
         this.wrapper = wrapper; //父容器，展示弹幕的div
-        this.dmPool = [];
-        this.unLoadDm = [];//已发送的弹幕
-        this.domObject;
-        this.domObjectArray = [];
         this.speed = speed;
+        this.domObjectArray = [];
         this.hasLock = new Array(MAX_CHANEL).fill(false);
         this.currentDm = new Array(MAX_CHANEL);
+        this.dmIndex = 0;
+        this.data = new Array();
         for (let i = 0; i < 10; i++) {
             this.currentDm[i] = new Array();
         }
     }
     updataDm(time) {
-        if (this.dm.length <= dmIndex) {
-            return;
+        console.log(this.dmIndex)
+        while (this.dm[this.dmIndex].time < time) {
+            this.dmIndex += 1;
+            if (this.dm.length <= this.dmIndex) {
+                this.dmIndex = 0;
+                return;
+            }
         }
-        let data = new Array();
-        for (let i = this.dm[dmIndex].time; time <= i && i < time + 0.5 && dmIndex < this.dm.length; dmIndex++) {
-            data.push(this.dm[dmIndex].data);
-            i = this.dm[dmIndex].time;
+        for (let i = this.dm[this.dmIndex].time; time <= i && i < time + 0.5 && this.dmIndex < this.dm.length; this.dmIndex++) {
+            this.data.push(this.dm[this.dmIndex].data);
+            i = this.dm[this.dmIndex].time;
+            //console.log(i);
         }
-        if (data.length) {
-            this.fillDm(data);
+        if (this.data.length) {
+            this.fillDm(this.data);
         }
-        //console.log(dmIndex);
+        //console.log(this.dm);
         //console.log(this.currentDm);
         //console.log(this.currentDm);
     }
@@ -53,7 +56,7 @@ class dmClass {
             startTime: new Date().getTime(),
             suspend: new Date().getTime(),
             runningTime: 0,
-            chanal:i
+            chanal: i
         }
         dom.addEventListener('transitionend', () => {
             dom.style.transition = `none`;
@@ -78,7 +81,7 @@ class dmClass {
             dom.style.transition = `transform ${this.speed}s linear`;
             dom.style.transform = `translateX(-${this.wrapper.clientWidth}px)`;
             domObject.startTime = new Date().getTime(),
-            domObject.suspend = new Date().getTime();
+                domObject.suspend = new Date().getTime();
             domObject.runningTime = 0;
             this.currentDm[domObject.chanal].push(domObject);
         }
@@ -110,6 +113,13 @@ class dmClass {
                 this.hasLock[i] = true;
             }
         }
+        for (let i = 0; i < MAX_CHANEL; i++) {
+            if (this.currentDm[i].length < 4) {
+                this.hasLock[i] = false;
+                return i;
+            }
+        }
+
     }
     dmPause() {
         for (let i = 0; i < MAX_CHANEL; i++) {
@@ -134,6 +144,23 @@ class dmClass {
                 dom.style.transform = `translateX(-${this.wrapper.clientWidth}px`;
                 this.currentDm[i][j].startTime = new Date().getTime();
             }
+        }
+    }
+    cleanDm() {
+        let childs = this.wrapper.childNodes;
+        while (childs.length) {
+            this.wrapper.removeChild(childs[0]);
+        }
+    }
+    reset() {
+        this.cleanDm();
+        this.domObjectArray = [];
+        this.hasLock = new Array(MAX_CHANEL).fill(false);
+        this.currentDm = new Array(MAX_CHANEL);
+        this.dmIndex = 0;
+        this.data = new Array();
+        for (let i = 0; i < 10; i++) {
+            this.currentDm[i] = new Array();
         }
     }
 }

@@ -324,7 +324,8 @@ export default {
           this.pauseTime = this.videoobj.currentTime;
           //this.dminit.intervalInsert(this.videoobj.currentTime);
         });
-        this.videoobj.addEventListener("ended", function() {
+        this.videoobj.addEventListener("ended", ()=> {
+          this.dm.dmPause();
           this.switchVideo = "play";
           //this.dminit.dmPool = this.damuk.slice();
         });
@@ -333,13 +334,12 @@ export default {
     playVideo() {
       //this.dminit.dmPool = this.damuk.slice();
       this.dm.dmPlay();
-      let ct = this.videoobj.currentTime;
       let dmTime = setInterval(() => {
+        let ct = this.videoobj.currentTime;
         if (this.videoobj.paused) {
           clearInterval(dmTime);
         }
         this.dm.updataDm(ct);
-        ct = ct + 0.5;
       }, 500);
       this.videoobj.play();
       this.switchVideo = "stop";
@@ -351,6 +351,7 @@ export default {
       //animation-play-state
     },
     udjdt(e) {
+      this.dm.reset();
       this.videoobj.currentTime =
         (this.jdtposstion / 100) * this.videoobj.duration;
       let playPromise = this.videoobj.play();
@@ -359,13 +360,14 @@ export default {
         playPromise
           .then(() => {
             this.videoobj.play();
+            this.dm.dmPlay();
             this.isLoding = false;
           })
           .catch(res => {
             console.log(res);
           });
       }
-      this.dminit.clearDm();
+      this.dm.cleanDm();
       //this.dminit.dmPool = this.damuk.slice();
       this.switchVideo = "stop";
     },
