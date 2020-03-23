@@ -22,16 +22,6 @@
             <bfq v-if="!(videoInfo == '')" class="video" :video="videoInfo" />
           </div>
         </div>
-        <div id="dm-ctr">
-          <i-Switch>
-            <span slot="open">弹</span>
-            <span slot="close">弹</span>
-          </i-Switch>
-          <div class="dm-input-box">
-            <input type="text" id="dmInput" />
-            <div class="bui-dm">发送</div>
-          </div>
-        </div>
         <div class="introduction">{{videoInfo.introduction}}</div>
         <div id="comment">
           <p>评论</p>
@@ -199,45 +189,11 @@
   width: 834px;
   height: 540px;
 }
-#dm-ctr,
 #comment {
   width: 100%;
   display: flex;
   flex-direction: row;
   margin-top: 10px;
-}
-.dm-input-box {
-  display: flex;
-  flex: row;
-}
-#dmInput {
-  color: #000;
-  flex-grow: 1;
-  font-weight: 500;
-  border: 0;
-  height: 30px;
-  line-height: 30px;
-  box-sizing: border-box;
-  padding: 0 5px;
-  font-size: 14px;
-  min-width: 115px;
-  text-decoration: none;
-  outline: none;
-  width: 300px;
-  background: rgba($color: #fff, $alpha: 0.8);
-}
-.bui-dm {
-  z-index: 13;
-  height: 30px;
-  width: 60px;
-  min-width: 60px;
-  line-height: 30px;
-  text-align: center;
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-  border-radius: 0 2px 2px 0;
-  background: #2d8cf0;
-  cursor: pointer;
 }
 #up-info {
   display: flex;
@@ -438,7 +394,7 @@ export default {
       let filePath = this.videoInfo.cover_img.split("/");
       getCommentFD.append("code","getComment");
       getCommentFD.append("filePath",filePath[3]+"/"+ filePath[4]);
-      console.log(filePath[3]+"/"+ filePath[4])
+      //console.log(filePath[3]+"/"+ filePath[4])
       this.$axios({
         method: "post",
         data:getCommentFD,

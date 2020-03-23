@@ -18,18 +18,20 @@ class dmClass {
         }
     }
     updataDm(time) {
-        console.log(this.dmIndex)
-        while (this.dm[this.dmIndex].time < time) {
-            this.dmIndex += 1;
-            if (this.dm.length <= this.dmIndex) {
-                this.dmIndex = 0;
-                return;
+        //console.log(this.dmIndex)
+        if (this.dm.length > this.dmIndex) {
+            while (this.dm[this.dmIndex].time < time) {
+                this.dmIndex += 1;
+                if (this.dm.length <= this.dmIndex) {
+                    this.dmIndex = 0;
+                    return;
+                }
             }
-        }
-        for (let i = this.dm[this.dmIndex].time; time <= i && i < time + 0.5 && this.dmIndex < this.dm.length; this.dmIndex++) {
-            this.data.push(this.dm[this.dmIndex].data);
-            i = this.dm[this.dmIndex].time;
-            //console.log(i);
+            for (let i = this.dm[this.dmIndex].time; time <= i && i < time + 0.5 && this.dmIndex < this.dm.length; this.dmIndex++) {
+                this.data.push(this.dm[this.dmIndex].data);
+                i = this.dm[this.dmIndex].time;
+                //console.log(i);
+            }
         }
         if (this.data.length) {
             this.fillDm(this.data);
@@ -79,7 +81,7 @@ class dmClass {
             let domWidth = dom.offsetWidth;
             dom.style.right = `-${domWidth}px`;
             dom.style.transition = `transform ${this.speed}s linear`;
-            dom.style.transform = `translateX(-${this.wrapper.clientWidth}px)`;
+            dom.style.transform = `translateX(-${this.wrapper.clientWidth + domWidth}px)`;
             domObject.startTime = new Date().getTime(),
                 domObject.suspend = new Date().getTime();
             domObject.runningTime = 0;
@@ -89,7 +91,8 @@ class dmClass {
             let i = this.getChanal();
             let domObject = this.initDom(i, (dom) => {
                 let setms = setInterval(() => {
-                    domObject.dom.style.transform = `translateX(-${this.wrapper.clientWidth}px)`;
+                    let domWidth = domObject.dom.offsetWidth;
+                    domObject.dom.style.transform = `translateX(-${this.wrapper.clientWidth + domWidth}px)`;
                     clearInterval(setms);
                 }, 1);
                 //console.log(dom)
@@ -125,12 +128,13 @@ class dmClass {
         for (let i = 0; i < MAX_CHANEL; i++) {
             for (let j = 0; j < this.currentDm[i].length; j++) {
                 let dom = this.currentDm[i][j].dom;
+                let domWidth = dom.offsetWidth;
                 this.currentDm[i][j].suspend = new Date().getTime();
                 let { top, left } = getComputedStyle(dom);
                 let offsetTime = this.currentDm[i][j].suspend - this.currentDm[i][j].startTime;
                 this.currentDm[i][j].runningTime += offsetTime;
                 let offsetPercent = ((this.currentDm[i][j].runningTime / 1000) / this.speed).toFixed(3);
-                let offsetX = offsetPercent * (left.replace(/px/, ""));
+                let offsetX = offsetPercent * (parseInt(left.replace(/px/, ""))+domWidth);
                 dom.style.transition = `none`;
                 dom.style.transform = `translateX(-${offsetX}px`;
             }
@@ -140,8 +144,9 @@ class dmClass {
         for (let i = 0; i < MAX_CHANEL; i++) {
             for (let j = 0; j < this.currentDm[i].length; j++) {
                 let dom = this.currentDm[i][j].dom;
+                let domWidth = dom.offsetWidth;
                 dom.style.transition = `transform ${this.speed - (this.currentDm[i][j].runningTime) / 1000}s linear`;
-                dom.style.transform = `translateX(-${this.wrapper.clientWidth}px`;
+                dom.style.transform = `translateX(-${this.wrapper.clientWidth + domWidth}px`;
                 this.currentDm[i][j].startTime = new Date().getTime();
             }
         }
@@ -162,6 +167,33 @@ class dmClass {
         for (let i = 0; i < 10; i++) {
             this.currentDm[i] = new Array();
         }
+    }
+    biudm(dm){
+        console.log(dm);
+        let i = this.getChanal();
+        let dom = document.createElement('div');
+        dom.innerText = dm.text;
+        dom.style.cssText = `
+        position: absolute;
+        top: ${i * 30}px;
+        right:0;
+        white-space: nowrap;
+        user-select: none;
+        color: #fff;
+        transform: translateX(0px);
+        transition: transform ${this.speed}s linear 0s;
+        padding:5px;
+        border: 2px solid white;
+    `;     
+    dom.addEventListener('transitionend',()=>{
+        dom.remove();
+    })  
+    this.wrapper.appendChild(dom); 
+    let onceInterval = setInterval(()=>{
+        let domWidth = dom.offsetWidth;
+        dom.style.transform = `translateX(-${this.wrapper.clientWidth + domWidth}px)`;
+        clearInterval(onceInterval);
+    },1)
     }
 }
 export default dmClass;
