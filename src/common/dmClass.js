@@ -169,10 +169,9 @@ class dmClass {
         }
     }
     biudm(dm){
-        console.log(dm);
         let i = this.getChanal();
         let dom = document.createElement('div');
-        dom.innerText = dm.text;
+        dom.innerText = dm.data;
         dom.style.cssText = `
         position: absolute;
         top: ${i * 30}px;

@@ -9,6 +9,9 @@ import user from "../components/userSpace/user"
 import videoManage from "../components/userSpace/videoManage"
 import adminSystem from "../views/adminSystem"
 import tmp_video from "../components/adminSystem/tmp_video"
+import visitorSpace from "../components/userSpace/visitorSpace"
+import errorPage from "../components/errorPage"
+import fans from "../components/userSpace/fans"
 
 Vue.use(VueRouter);
 
@@ -29,12 +32,12 @@ Vue.use(VueRouter);
 //   }
 // ];
 export default new VueRouter({
-  mode:'history',
-  routes:[{
-      path: "/",
-      // name: "uploadVideo",
-      // component: uploadVideo 
-      redirect: "/Home" 
+  mode: 'history',
+  routes: [{
+    path: "/",
+    // name: "uploadVideo",
+    // component: uploadVideo 
+    redirect: "/Home"
   },
   {
     path: "/Home",
@@ -52,21 +55,32 @@ export default new VueRouter({
     component: videopage
   },
   {
-    path:"/userSpace",
-    name:"userSpace",
-    component:userSpace,
-    children:[
-      {path:"user",name:'首页',component:user},
-      {path:"videoManage",name:'视频管理',component:videoManage}
+    path: "/visitorSpace/:id",
+    name: "visitorSpace",
+    component: visitorSpace
+  },
+  {
+    path: "/error/errorPage",
+    name: "errorPage",
+    component: errorPage
+  },
+  {
+    path: "/userSpace",
+    name: "userSpace",
+    component: userSpace,
+    children: [
+      { path: "user", name: '首页', component: user },
+      { path: "videoManage", name: '视频管理', component: videoManage },
+      { path:"fans", name: '粉丝关注', component: fans }
     ]
   },
   {
-    path:"/adminSystem",
-    name:"adminSystem",
-    component:adminSystem,
-    children:[
-      {path:"/adminSystem/tmp_video",name:"审核视频",component:tmp_video}
+    path: "/adminSystem",
+    name: "adminSystem",
+    component: adminSystem,
+    children: [
+      { path: "/adminSystem/tmp_video", name: "审核视频", component: tmp_video }
     ]
   }
-]
+  ]
 });

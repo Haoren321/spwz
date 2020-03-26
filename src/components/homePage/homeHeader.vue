@@ -18,7 +18,7 @@
         <div class="userMenuName">{{user.userName}}</div>
         <Divider style="background:rgba(0, 0, 0, .2);margin:10px 0 0 0;" />
         <div class="userConfig">
-          <a>
+          <a v-on:click="gotoUser('fans')">
             粉丝
             <span class="text-link">111</span>
           </a>
@@ -34,7 +34,7 @@
         <Divider style="background:rgba(0, 0, 0, .2);margin:0px 0 0 0;" />
         <div class="userconfig">
           <div class="userSpace" v-on:click="gotoUser('user')">个人空间</div>
-          <div class="userSpace">投稿管理</div>
+          <div class="userSpace" v-on:click="gotoUser('videoManage')">投稿管理</div>
         </div>
         <Divider style="background:rgba(0, 0, 0, .2);margin:0px 0 0 0;" />
         <div class="loginOut">
@@ -96,6 +96,7 @@
   top: 25px;
   cursor: pointer;
   z-index: 902;
+  object-fit: cover;
 }
 #userLogin:hover {
   padding-top: 18px;

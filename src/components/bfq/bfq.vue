@@ -408,7 +408,7 @@ export default {
       volume: 0,
       switchDm: true,
       biuDm: "",
-      interruptTime: false,
+      interruptTime: false
     };
   },
   created: function() {
@@ -463,11 +463,9 @@ export default {
       //this.dminit.dmPool = this.damuk.slice();
       this.videoobj.pause();
       let dmTime = setInterval(() => {
-        console.log(this.switchDm);
         let ct = this.videoobj.currentTime;
         if (this.videoobj.paused || !this.switchDm) {
           clearInterval(dmTime);
-          console.log("aa");
         }
         this.dm.updataDm(ct);
       }, 500);
@@ -510,19 +508,19 @@ export default {
     hidebar() {
       this.barisshow = false;
     },
-    getDm(){
+    getDm() {
       let getDmFd = new FormData();
       let filePath = this.video.cover_img.split("/");
-      getDmFd.append("code","getDm");
-      getDmFd.append("filePath",filePath[3]+"/"+ filePath[4]);
+      getDmFd.append("code", "getDm");
+      getDmFd.append("filePath", filePath[3] + "/" + filePath[4]);
       //console.log(filePath[3]+"/"+ filePath[4])
       this.$axios({
         method: "post",
-        data:getDmFd,
+        data: getDmFd,
         url: "/api/controller/dm.php"
       }).then(res => {
         this.dm.dm = res.data;
-        //console.log(this.damuk);
+        //console.log(res.data);
       });
     },
     videoCtrShwo(e) {
@@ -532,7 +530,7 @@ export default {
       timeCount = setTimeout(() => {
         if (!this.interruptTime) {
           dom.style.display = `none`;
-        }        
+        }
       }, 3000);
     },
     videoCtrMover() {
@@ -555,7 +553,7 @@ export default {
     alterVolume(e) {
       this.videoobj.volume = 1 - e.offsetY / 66;
       this.volume = (this.videoobj.volume * 100).toFixed(0);
-      console.log(this.volume);
+      //console.log(this.volume);
     },
     switchDM(status) {
       if (status == true) {
@@ -575,16 +573,49 @@ export default {
         return this.$Message.error("请登录后再发弹幕！");
       }
       let dm = {
-        text: ""
+        userId: "",
+        data: "",
+        time: "",
+        date: ""
       };
-      dm.text = this.biuDm;
+      //dm.userId
+      if (this.biuDm == "") {
+        return this.$Message.error("弹幕不能为空");
+      }
+      this.$store.state.user.userId;
+      dm.userId = this.$store.state.user.userId;
+      dm.data = this.biuDm;
+      dm.time = this.videoobj.currentTime.toFixed(1);
+      let date = new Date();
+      dm.date =
+        date.toLocaleDateString().replace(/\//g, "-") +
+        " " +
+        date.toTimeString().replace(/G.*\)/, "");
       this.dm.biudm(dm);
-      console.log(this.biuDm);
+      let sendDmFd = new FormData();
+      let dmIndex = this.getDmIndex(dm.time); //将该条弹幕插入弹幕池的索引
+      if (this.dm.dm == "") {
+        this.dm.dm = [dm];
+      } else {
+        this.dm.dm.splice(dmIndex, 0, dm);
+      }
+      //console.log(dmIndex,this.dm.dm.length);
+      let filePath = this.video.cover_img.split("/");
+      sendDmFd.append("code", "saveDm");
+      sendDmFd.append("filePath", filePath[3] + "/" + filePath[4]);
+      sendDmFd.append("dm", JSON.stringify(this.dm.dm));
+      this.$axios({
+        method: "post",
+        data: sendDmFd,
+        url: "/api/controller/dm.php"
+      }).then(res => {
+        //console.log(res);
+      });
     },
     exitFullscreen() {
       this.isScreenfull = false;
       let sc = this.isFullscreen();
-      if(!sc){
+      if (!sc) {
         return;
       }
       console.log(this.isFullscreen);
@@ -620,6 +651,20 @@ export default {
         document.webkitFullscreenElement ||
         false
       );
+    },
+    getDmIndex(time) {
+      if (this.dm.dm.length == 0) {
+        return 0;
+      }
+      let index = 0;
+      while (Number(time) >= Number(this.dm.dm[index].time)) {
+        index++;
+        if (index >= this.dm.dm.length) {
+          return index;
+        }
+      }
+      console.log(index);
+      return index;
     }
   }
 };

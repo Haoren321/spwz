@@ -15,7 +15,7 @@
             <router-link to="/userSpace/videoManage">视频管理</router-link>
           </li>
           <li class="menuStyle">
-            <router-link to="/userSpace/aa">user</router-link>
+            <router-link to="/userSpace/fans">粉丝关注</router-link>
           </li>
         </div>
       </div>

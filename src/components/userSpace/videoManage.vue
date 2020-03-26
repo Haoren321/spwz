@@ -2,16 +2,27 @@
   <div id="videoManage">
     <div id="releasedVideo" class="manageStyle">
       <span>已发布的视频</span>
+      <div id="waitingAudit">
+        <a class="waitingAudit" :href="'/video/'+item.sv_id" v-for="item in videoArray" v-bind:key="item.sv_id">
+          <div class="auditImgWrap">
+            <img :src="'/api/'+item.cover_img" alt srcset />
+          </div>
+          <div class="aduitInfo">
+            <p>视频的标题：{{item.title}}</p>
+            <p>简介：{{item.introduction}}</p>
+          </div>
+        </a>
+      </div>
     </div>
     <div id="auditedVideo" class="manageStyle">
       <span>待审核的视频</span>
       <div id="waitingAudit">
         <div class="waitingAudit" v-for="item in audit" v-bind:key="item.sv_id">
           <div class="auditImgWrap">
-            <img :src="'/api/video/tmp_video/'+item.videoFile+'/'+item.coverImgName" alt="" srcset="">
+            <img :src="'/api/video/tmp_video/'+item.videoFile+'/'+item.coverImgName" alt srcset />
           </div>
           <div class="aduitInfo">
-            <p >视频的标题：{{item.title}}</p>
+            <p>视频的标题：{{item.title}}</p>
             <p>简介：{{item.introduction}}</p>
             <p>投稿时间：{{item.time}}</p>
           </div>
@@ -97,7 +108,7 @@
       </div>
       <Button id="release" v-on:click="release" type="primary" style="margin:10px 0px;">发布</Button>
     </div>
-    <Modal title="投稿消息" v-model="releaseFinish" cancel-text='' @on-ok="releaseResult">
+    <Modal title="投稿消息" v-model="releaseFinish" cancel-text @on-ok="releaseResult">
       <Alert type="success">投稿成功，等待审核.</Alert>
     </Modal>
   </div>
@@ -222,33 +233,33 @@
   width: 100%;
   height: 100%;
 }
-.waitingAudit{
+.waitingAudit {
   display: flex;
   flex-direction: row;
   height: 90px;
   padding: 10px 0 0 10px;
   overflow: hidden;
   border: 1px solid rgba(0, 0, 0, 0.4);
-  background:rgba(39,60,104,0.4);
+  background: rgba(39, 60, 104, 0.4);
   margin: 10px 0px 0px 15px;
   width: 550px;
-  &:hover{
-    box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.6); 
+  &:hover {
+    box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.6);
   }
 }
-.auditImgWrap{
+.auditImgWrap {
   width: 120px;
 }
-.auditImgWrap>img{
+.auditImgWrap > img {
   width: 100%;
 }
-.aduitInfo{
-    margin-left: 20px;
-    width: 330px;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    color: rgba($color: #fff, $alpha: 0.8);
+.aduitInfo {
+  margin-left: 20px;
+  width: 330px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  color: rgba($color: #fff, $alpha: 0.8);
 }
 </style>
 <script>
@@ -271,25 +282,27 @@ export default {
         coverImgName: ""
       },
       videoCoverImg: "",
-      releaseFinish:false,
-      audit:'',
+      releaseFinish: false,
+      audit: "",
+      videoArray: ""
     };
   },
-  mounted(){
+  mounted() {
     this.initPage();
   },
   methods: {
-    initPage(){
+    initPage() {
       let userId = new FormData();
-      userId.append("userId",this.$store.state.user.userId);
+      userId.append("userId", this.$store.state.user.userId);
       this.$axios({
-        method:"post",
-        data:userId,
-        url: "/api/controller/initVideoPage.php",
-      }).then(res=>{
-        this.audit = res.data;
-        console.log(this.audit);
-      })
+        method: "post",
+        data: userId,
+        url: "/api/controller/initVideoPage.php"
+      }).then(res => {
+        this.audit = res.data.auditVideo;
+        this.videoArray = res.data.video;
+        console.log(res.data);
+      });
     },
     async handleFiles(e) {
       this.uploadName = e.target.files[0].name;
@@ -376,16 +389,16 @@ export default {
     release() {
       this.videoInfo.userId = this.$store.state.user.userId;
       this.videoInfo.coverImgName = this.videoCoverImg.name;
-      for(let key in this.videoInfo){
-        if(this.videoInfo[key] === ''){
+      for (let key in this.videoInfo) {
+        if (this.videoInfo[key] === "") {
           //console.log("the "+key+"  cannot be empty");
-          alert("the "+key+"  cannot be empty");
-          return ;
+          alert("the " + key + "  cannot be empty");
+          return;
         }
       }
-      if(this.videoCoverImg == ''){
+      if (this.videoCoverImg == "") {
         alert("the videoCoverImg cannot be empty");
-        return ;
+        return;
       }
       let coverImgInfo = new FormData();
       let jsonVideoInfo;
@@ -412,7 +425,7 @@ export default {
       });
       //console.log(JSON.stringify(this.videoInfo));
     },
-    releaseResult(){
+    releaseResult() {
       location.reload();
     }
   }

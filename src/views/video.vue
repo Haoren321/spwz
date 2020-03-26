@@ -8,6 +8,7 @@
         <div id="video-hader"></div>
         <div id="playerWarp">
           <h1 title="这是视频的标题" class="video-title">{{videoInfo.title}}</h1>
+          <div id="report" @click="report">稿件投诉</div>
           <div class="video-data">
             <span>{{videoInfo.tags}}</span>
             <!-- <span title="投稿时间">投稿时间</span> -->
@@ -22,7 +23,7 @@
             <bfq v-if="!(videoInfo == '')" class="video" :video="videoInfo" />
           </div>
         </div>
-        <div class="introduction">{{videoInfo.introduction}}</div>
+        <div class="introduction">简介：{{videoInfo.introduction}}</div>
         <div id="comment">
           <p>评论</p>
           <div class="xhx"></div>
@@ -145,12 +146,14 @@
   width: 848px;
   height: 100%;
   background: #17233d;
+  box-shadow: 2px 5px 10px rgba(0, 0, 0, 0.6);
 }
 #list {
   width: 330px;
   background: #17233d;
   height: 200px;
   margin-left: 20px;
+  box-shadow: 2px 5px 10px rgba(0, 0, 0, 0.6);
 }
 .video-title {
   font-size: 18px;
@@ -206,11 +209,16 @@
   border-radius: 50%;
   width: 58px;
   height: 58px;
+  object-fit: cover;
 }
 .up-name {
   margin-left: 4px;
   margin-top: 6px;
   font-size: 14px;
+}
+.introduction{
+  margin-top: 10px;
+  text-align: left;
 }
 .xhx {
   width: 100%;
@@ -274,6 +282,17 @@
   height: 64px;
   padding: 8px;
 }
+#report{
+  position: relative;
+  float: right;
+  right: 10px;
+  bottom:30px;
+  color: #99a2aa;
+}
+#report:hover{
+  cursor: pointer;
+  color: #ffffff;
+}
 </style>
 <script>
 import homeHeader from "../components/homePage/homeHeader";
@@ -321,8 +340,13 @@ export default {
         data: videoInfo,
         url: "/api/controller/svideoCtro.php"
       }).then(res => {
+        if(res.data == ""){
+            this.$router.push({ path: "/error/errorPage" });
+        }else{
         this.videoInfo = res.data[0];
         this.getComment();
+        console.log(this.videoInfo);
+        }
       });
     },
     getFocus(foucsId, beFoucsId) {
@@ -346,7 +370,6 @@ export default {
         this.$refs.headerChild._data.isHidden = true;
         this.$refs.headerChild._data.loginModal = true;
         this.$refs.headerChild._data.registerModal = false;
-        console.log(this.$refs.headerChild._data);
       } else {
         if(this.$store.state.user.userId == this.videoInfo.userId){
           return this.$Message.error("不能关注自己");
@@ -354,11 +377,17 @@ export default {
         let foucsId = this.$store.state.user.userId;
         let beFoucsId = this.videoInfo.userId;
         let beFoucsName = this.videoInfo.userName;
+        let foucsName = this.$store.state.user.userName;
+        let foucsIcon = this.$store.state.user.userIcon;
+        let beFoucsIcon = this.videoInfo.userIcon;
         let foucs = new FormData();
         foucs.append("code", "upFoucs");
         foucs.append("foucs", foucsId);
         foucs.append("beFoucs", beFoucsId);
         foucs.append("beFoucsName", beFoucsName);
+        foucs.append("foucsName",foucsName);
+        foucs.append("foucsIcon",foucsIcon);
+        foucs.append("beFoucsIcon",beFoucsIcon);
         this.$axios({
           method: "post",
           data: foucs,
@@ -464,7 +493,6 @@ export default {
           time: time,
           reply: []
         };
-        console.log(this.comment);
         this.comment[this.commentIndex].reply.splice(0, 0, newComment);
         this.commentItem.status = "false";
         this.sendComment();
@@ -512,6 +540,22 @@ export default {
       }).then(res=>{
         console.log(res.data);
       })
+    },
+    report(){
+      let info = new FormData();
+      info.append("code","report");
+      info.append("sv_id",this.videoInfo.sv_id);
+      this.$axios({
+        method:'post',
+        data:info,
+        url:"/api/controller/svideoCtro.php"
+      }).then(res=>{
+        if(res.data){
+          this.$Message.success("投诉成功，等待受理");
+        }
+        console.log(res.data);
+      })
+      console.log(this.videoInfo.sv_id);
     }
   }
 };
