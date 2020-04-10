@@ -3,29 +3,40 @@
     <div id="nav">
       <Menu id="menu" mode="horizontal" theme="light" active-name="1">
         <MenuItem name="1">
-          <div id="index-link">
-            <Icon type="md-home" id="index-icon" />
-            <div>首页</div>
+          <div id="index-link" style="padding-top:0px;">
+            <div>
+              <Icon type="md-home" id="index-icon" />
+              首页
+            </div>
           </div>
         </MenuItem>
         <MenuItem name="2">
-          <div id="rank-link">
-            <Icon type="ios-stats" id="rank-icon" />
-            <div>排行榜</div>
+          <div id="rank-link" style="padding-top:0px">
+            <router-link to="/category/rank">
+              <Icon type="ios-stats" id="rank-icon" />排行榜
+            </router-link>
           </div>
           <div class="shx"></div>
         </MenuItem>
         <MenuItem name="3">
-          <Icon type="ios-videocam-outline" />动画
+          <a :href="'/category/'+'comic'" class="categoryLink">
+            <Icon type="ios-videocam-outline" />动画
+          </a>
         </MenuItem>
         <MenuItem name="4">
-          <Icon type="ios-game-controller-b-outline" />游戏
+          <a :href="'/category/'+'game'" class="categoryLink">
+            <Icon type="ios-game-controller-b-outline" />游戏
+          </a>
         </MenuItem>
         <MenuItem name="5">
-          <Icon type="ios-musical-notes-outline" />音乐
+          <a :href="'/category/'+'music'" class="categoryLink">
+            <Icon type="ios-musical-notes-outline" />音乐
+          </a>
         </MenuItem>
         <MenuItem name="6">
-          <Icon type="ios-book-outline" />学习
+          <a :href="'/category/'+'learn'" class="categoryLink">
+            <Icon type="ios-book-outline" />学习
+          </a>
         </MenuItem>
       </Menu>
     </div>
@@ -60,7 +71,8 @@
                     <div class="info">
                       <p class="title">{{item.title}}}</p>
                       <div class="author">
-                        <Icon type="ios-square-outline" />{{item.author}}
+                        <Icon type="ios-square-outline" />
+                        {{item.author}}
                       </div>
                       <p>{{item.coutWatch}}</p>
                     </div>
@@ -88,24 +100,24 @@
           <a>动画</a>
         </dir>
         <div class="card-content">
-            <div class="second-list-box">
-              <div class="video-card-common">
-                <div class="card-pic">
-                  <a href="">
-                    <img src="" alt=""/>
-                    <div class="count">
-                      <div class="card-left">
-                        <span></span>
-                        <span></span>
-                      </div>
-                      <div class="card-right">
-                        <span></span>
-                      </div>
+          <div class="second-list-box">
+            <div class="video-card-common">
+              <div class="card-pic">
+                <a href>
+                  <img src alt />
+                  <div class="count">
+                    <div class="card-left">
+                      <span></span>
+                      <span></span>
                     </div>
-                  </a>
-                </div>
+                    <div class="card-right">
+                      <span></span>
+                    </div>
+                  </div>
+                </a>
               </div>
             </div>
+          </div>
         </div>
       </div>
       <div class="right">
@@ -187,83 +199,90 @@ export default {
     return {
       carousel_speed: 4000,
       indexCoverimg: "/api/img/coverImg/timg.jpg",
-      lunbodata:"",
-      carouselData:[{
-        svId:'0',
-        title:'做好防护，走出家门，大sao为远方的朋友做了一顿特殊的炸鸡腿',
-        coverImg:'/api/img/thumbnail/dasao.jpg',
-        //var $preview_img;
-        sourceUrl:'',
-        author:'徐大sao',
-        introduction:'做好防护，走出家门，大sao为远方的朋友做了一顿特殊的炸鸡腿',
-        coutWatch:'231万'        
-      },
-      {
-        svId:'1',
-        title:'做好防护，走出家门，大sao为远方的朋友做了一顿特殊的炸鸡腿',
-        coverImg:'/api/img/thumbnail/dasao.jpg',
-        //var $preview_img;
-        sourceUrl:'#',
-        author:'徐大sao',
-        introduction:'做好防护，走出家门，大sao为远方的朋友做了一顿特殊的炸鸡腿',
-        coutWatch:'231万'        
-      },
-      {
-        svId:'2',
-        title:'做好防护，走出家门，大sao为远方的朋友做了一顿特殊的炸鸡腿',
-        coverImg:'/api/img/thumbnail/dasao.jpg',
-        //var $preview_img;
-        sourceUrl:'#',
-        author:'徐大sao',
-        introduction:'做好防护，走出家门，大sao为远方的朋友做了一顿特殊的炸鸡腿',
-        coutWatch:'231万'        
-      },
-      {
-        svId:'3',
-        title:'做好防护，走出家门，大sao为远方的朋友做了一顿特殊的炸鸡腿',
-        coverImg:'/api/img/thumbnail/dasao.jpg',
-        //var $preview_img;
-        sourceUrl:'#',
-        author:'徐大sao',
-        introduction:'做好防护，走出家门，大sao为远方的朋友做了一顿特殊的炸鸡腿',
-        coutWatch:'231万'        
-      },
-      {
-        svId:'4',
-        title:'做好防护，走出家门，大sao为远方的朋友做了一顿特殊的炸鸡腿',
-        coverImg:'/api/img/thumbnail/dasao.jpg',
-        //var $preview_img;
-        sourceUrl:'#',
-        author:'徐大sao',
-        introduction:'做好防护，走出家门，大sao为远方的朋友做了一顿特殊的炸鸡腿',
-        coutWatch:'231万'        
-      },
-      {
-        svId:'5',
-        title:'做好防护，走出家门，大sao为远方的朋友做了一顿特殊的炸鸡腿',
-        coverImg:'/api/img/thumbnail/dasao.jpg',
-        //var $preview_img;
-        sourceUrl:'#',
-        author:'徐大sao',
-        introduction:'做好防护，走出家门，大sao为远方的朋友做了一顿特殊的炸鸡腿',
-        coutWatch:'231万'        
-      }]
+      lunbodata: "",
+      carouselData: [
+        {
+          svId: "0",
+          title: "做好防护，走出家门，大sao为远方的朋友做了一顿特殊的炸鸡腿",
+          coverImg: "/api/img/thumbnail/dasao.jpg",
+          //var $preview_img;
+          sourceUrl: "",
+          author: "徐大sao",
+          introduction:
+            "做好防护，走出家门，大sao为远方的朋友做了一顿特殊的炸鸡腿",
+          coutWatch: "231万"
+        },
+        {
+          svId: "1",
+          title: "做好防护，走出家门，大sao为远方的朋友做了一顿特殊的炸鸡腿",
+          coverImg: "/api/img/thumbnail/dasao.jpg",
+          //var $preview_img;
+          sourceUrl: "#",
+          author: "徐大sao",
+          introduction:
+            "做好防护，走出家门，大sao为远方的朋友做了一顿特殊的炸鸡腿",
+          coutWatch: "231万"
+        },
+        {
+          svId: "2",
+          title: "做好防护，走出家门，大sao为远方的朋友做了一顿特殊的炸鸡腿",
+          coverImg: "/api/img/thumbnail/dasao.jpg",
+          //var $preview_img;
+          sourceUrl: "#",
+          author: "徐大sao",
+          introduction:
+            "做好防护，走出家门，大sao为远方的朋友做了一顿特殊的炸鸡腿",
+          coutWatch: "231万"
+        },
+        {
+          svId: "3",
+          title: "做好防护，走出家门，大sao为远方的朋友做了一顿特殊的炸鸡腿",
+          coverImg: "/api/img/thumbnail/dasao.jpg",
+          //var $preview_img;
+          sourceUrl: "#",
+          author: "徐大sao",
+          introduction:
+            "做好防护，走出家门，大sao为远方的朋友做了一顿特殊的炸鸡腿",
+          coutWatch: "231万"
+        },
+        {
+          svId: "4",
+          title: "做好防护，走出家门，大sao为远方的朋友做了一顿特殊的炸鸡腿",
+          coverImg: "/api/img/thumbnail/dasao.jpg",
+          //var $preview_img;
+          sourceUrl: "#",
+          author: "徐大sao",
+          introduction:
+            "做好防护，走出家门，大sao为远方的朋友做了一顿特殊的炸鸡腿",
+          coutWatch: "231万"
+        },
+        {
+          svId: "5",
+          title: "做好防护，走出家门，大sao为远方的朋友做了一顿特殊的炸鸡腿",
+          coverImg: "/api/img/thumbnail/dasao.jpg",
+          //var $preview_img;
+          sourceUrl: "#",
+          author: "徐大sao",
+          introduction:
+            "做好防护，走出家门，大sao为远方的朋友做了一顿特殊的炸鸡腿",
+          coutWatch: "231万"
+        }
+      ]
     };
   },
   mounted: function() {
-    this.getIndexUrl()
+    this.getIndexUrl();
   },
   methods: {
     getIndexUrl() {
       let getData = new FormData();
-      getData.append("code","recommand");
+      getData.append("code", "recommand");
       this.$axios({
         method: "post",
-        data:getData,
+        data: getData,
         url: "/api/controller/svideoCtro.php"
-      }).then(res=>{
+      }).then(res => {
         this.lunbodata = res.data;
-        console.log(this.lunbodata);
       });
     }
   }

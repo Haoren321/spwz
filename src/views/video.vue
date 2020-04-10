@@ -11,7 +11,6 @@
           <div id="report" @click="report">稿件投诉</div>
           <div class="video-data">
             <span>{{videoInfo.tags}}</span>
-            <!-- <span title="投稿时间">投稿时间</span> -->
           </div>
           <div class="video-data">
             <span>{{videoInfo.cout_watch}} 播放</span>
@@ -120,7 +119,9 @@
             >已关注</i-button>
           </div>
         </div>
-        <div id="recommend-list"></div>
+        <div id="recommend-list">
+          <transition name="bounce"><recommend :reommendId="recommendId"/></transition>
+        </div>
       </div>
     </div>
   </div>
@@ -151,7 +152,7 @@
 #list {
   width: 330px;
   background: #17233d;
-  height: 200px;
+  height: 100%;
   margin-left: 20px;
   box-shadow: 2px 5px 10px rgba(0, 0, 0, 0.6);
 }
@@ -297,10 +298,12 @@
 <script>
 import homeHeader from "../components/homePage/homeHeader";
 import bfq from "../components/bfq/bfq";
+import recommend from "../components/bfq/recommend"
 export default {
   components: {
     homeHeader,
-    bfq
+    bfq,
+    recommend
   },
   data() {
     return {
@@ -313,7 +316,8 @@ export default {
       commentIndex: "",
       commentText: "",
       isLogin: this.$store.state.isLogin,
-      firstCommentText: ""
+      firstCommentText: "",
+      recommendId:"",
     };
   },
   watch: {
@@ -344,8 +348,9 @@ export default {
             this.$router.push({ path: "/error/errorPage" });
         }else{
         this.videoInfo = res.data[0];
+        this.recommendId = res.data[0].tags;
         this.getComment();
-        console.log(this.videoInfo);
+        console.log(res.data);
         }
       });
     },

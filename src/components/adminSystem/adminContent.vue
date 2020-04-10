@@ -7,8 +7,8 @@
             <Icon type="ios-navigate"></Icon>视频管理
           </template>
           <MenuItem name="tmp_video" to="/adminSystem/tmp_video">审核视频</MenuItem>
-          <MenuItem name="1-2">Option 2</MenuItem>
-          <MenuItem name="1-3">Option 3</MenuItem>
+          <MenuItem name="1-2" to="/adminSystem/report">投诉稿件</MenuItem>
+          <MenuItem name="1-3" to="/adminSystem/videoSystemMange">视频管理</MenuItem>
         </Submenu>
         <Submenu name="2">
           <template slot="title">
@@ -41,12 +41,7 @@
           </DropdownMenu>
         </Dropdown>
       </Header>
-      <Content :style="{padding: '0 16px 16px'}">
-        <Breadcrumb :style="{margin: '16px 0'}">
-          <BreadcrumbItem>Home</BreadcrumbItem>
-          <BreadcrumbItem>Components</BreadcrumbItem>
-          <BreadcrumbItem>Layout</BreadcrumbItem>
-        </Breadcrumb>
+      <Content :style="{padding: '10px 16px 16px'}">
         <Card>
           <div id="content">
               <router-view/>

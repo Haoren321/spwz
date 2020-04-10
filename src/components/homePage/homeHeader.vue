@@ -4,7 +4,13 @@
       <img src="../../assets/svideo_lightblue.png" alt />
     </div>
     <div id="search" v-show="isActive">
-      <Input search enter-button placeholder="Enter something..." />
+      <Input
+        search
+        enter-button
+        placeholder="Enter something..."
+        @on-search="search"
+        v-model="searchContent"
+      />
     </div>
     <div id="userLoginItem" v-if="login === false">
       <a id="login" @click="userLogin" style="color:#d9dadd;">
@@ -173,7 +179,7 @@ a {
 </style>
 <script>
 import loginTem from "../homePage/login";
-import registerTem from "../homePage/register"
+import registerTem from "../homePage/register";
 export default {
   components: {
     loginTem,
@@ -185,8 +191,9 @@ export default {
       login: this.$store.state.isLogin,
       isHidden: false,
       user: this.$store.state.user,
-      loginModal:false,
-      registerModal:false,
+      loginModal: false,
+      registerModal: false,
+      searchContent: ""
     };
   },
   computed: {
@@ -200,14 +207,14 @@ export default {
       this.isHidden = !this.$store.state.isLogin;
       location.reload();
       if (this.$store.state.isLogin) {
-        this.$store.commit("setUserInfo",this.user);
-      }else{
-        this.$store.commit("setUserInfo",'');
+        this.$store.commit("setUserInfo", this.user);
+      } else {
+        this.$store.commit("setUserInfo", "");
       }
     }
   },
   methods: {
-    userLogin(){
+    userLogin() {
       this.loginModal = true;
       this.registerModal = false;
       this.isHidden = true;
@@ -222,15 +229,34 @@ export default {
     getUserInfo(userInfo) {
       this.user = userInfo;
     },
-    gotoUser(e){
+    gotoUser(e) {
       //console.log(e);
-      this.$router.push({path:'/userSpace/'+e,params:{user:this.user}});
+      this.$router.push({
+        path: "/userSpace/" + e,
+        params: { user: this.user }
+      });
     },
-    loginOut(){
-        this.$store.commit("isLogin",false);
-        this.user = '';
-        this.isHidden = false;
-        location.reload();
+    loginOut() {
+      this.$store.commit("isLogin", false);
+      this.user = "";
+      this.isHidden = false;
+      location.reload();
+    },
+    search() {
+      let path = this.$route.path;
+      let pathItem = path.split("/");
+      if (pathItem[1] == "search") {
+        this.$router.push({
+          path:this.$route.path,
+          query: { keyword: this.searchContent }
+        });
+      } else {
+        let searchUrl = this.$router.resolve({
+          name: "search",
+          query: { keyword: this.searchContent }
+        });
+        window.open(searchUrl.href, "_blank");
+      }
     }
   }
 };

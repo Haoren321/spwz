@@ -12,9 +12,18 @@ import tmp_video from "../components/adminSystem/tmp_video"
 import visitorSpace from "../components/userSpace/visitorSpace"
 import errorPage from "../components/errorPage"
 import fans from "../components/userSpace/fans"
+import category from "../views/category"
+import cateforyItem from "../components/categoryPage/cateforyItem"
+import search from "../views/search"
+import report from "../components/adminSystem/report"
+import videoSystemMange from "../components/adminSystem/videoSystemManage"
 
 Vue.use(VueRouter);
 
+const routerPush = VueRouter.prototype.push
+VueRouter.prototype.push = function push(location) {
+  return routerPush.call(this, location).catch(error => error)
+}
 // const routes = [
 //   {
 //     path: "/uploadVideo",
@@ -71,16 +80,31 @@ export default new VueRouter({
     children: [
       { path: "user", name: '首页', component: user },
       { path: "videoManage", name: '视频管理', component: videoManage },
-      { path:"fans", name: '粉丝关注', component: fans }
+      { path: "fans", name: '粉丝关注', component: fans }
     ]
+  },
+  {
+    path: "/category",
+    name: "category",
+    component: category,
+    children: [
+      { path: "/category/:names", name: "cateforyItem", component: cateforyItem }
+    ]
+  },
+  {
+    path: "/search",
+    name: "search",
+    component: search,
   },
   {
     path: "/adminSystem",
     name: "adminSystem",
     component: adminSystem,
     children: [
-      { path: "/adminSystem/tmp_video", name: "审核视频", component: tmp_video }
+      { path: "/adminSystem/tmp_video", name: "审核视频", component: tmp_video },
+      { path: "/adminSystem/report", name: "投诉稿件", component: report },
+      { path: "/adminSystem/videoSystemMange", name: "管理视频", component: videoSystemMange }
     ]
-  }
+  },
   ]
 });

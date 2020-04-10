@@ -20,6 +20,7 @@
   </div>
 </template>
 <style lang="scss" scoped>
+
 .login {
   margin: 0 auto;
   width: 380px;

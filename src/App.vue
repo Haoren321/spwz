@@ -16,6 +16,7 @@
   min-width: 1198px;
   height: 100%;
 }
+
 </style>
 <script>
 export default {

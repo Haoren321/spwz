@@ -5,9 +5,9 @@
         <Icon type="ios-film-outline"></Icon>
         标题：{{item.title}}
       </p>
-      <a href="#" slot="extra" @click.prevent="changeLimit">
+      <p href="#" slot="extra" style="color:#000">
         <Icon type="ios-loop-strong"></Icon>审核
-      </a>
+      </p>
       <div class="video">
         <video
           :controls="item.sv_id"
@@ -31,7 +31,7 @@
       <div class="xhx"/>
       <div class="shenHe" v-show="item.sv_id">
         <Button type="primary" v-on:click="tongGuo(index,item)">通过</Button>    
-        <Button type="warning" >不通过</Button>       
+        <Button type="warning" v-on:click="buTongGuo(index,item)">不通过</Button>       
       </div>
       <div class="shenHeInfo" v-show="!item.sv_id">
         <Alert show-icon>审核完成</Alert>
@@ -115,6 +115,23 @@ export default {
         }       
         console.log(res.data);
       })
+    },
+    buTongGuo(index,item){
+      let data = new FormData();
+      data.append("code","delet");
+      data.append("tmp_svid",this.tmp_videoJson[index].sv_id);
+      data.append("tmp_file",this.tmp_videoJson[index].videoFile);
+      console.log(this.tmp_videoJson[index].sv_id);
+      this.$axios({
+        method:'post',
+        data:data,
+        url:"/api/controller/adminSystem.php"
+      }).then(res=>{
+        if(res.data == 1){
+          item.sv_id = false;
+        }       
+       console.log(res.data);
+      })      
     }
   }
 };
