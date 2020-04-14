@@ -12,17 +12,9 @@
         </Submenu>
         <Submenu name="2">
           <template slot="title">
-            <Icon type="ios-keypad"></Icon>Item 2
+            <Icon type="ios-keypad"></Icon>用户
           </template>
-          <MenuItem name="2-1">Option 1</MenuItem>
-          <MenuItem name="2-2">Option 2</MenuItem>
-        </Submenu>
-        <Submenu name="3">
-          <template slot="title">
-            <Icon type="ios-analytics"></Icon>Item 3
-          </template>
-          <MenuItem name="3-1">Option 1</MenuItem>
-          <MenuItem name="3-2">Option 2</MenuItem>
+          <MenuItem name="2-1" to="/adminSystem/userManage">用户管理</MenuItem>
         </Submenu>
       </Menu>
     </Sider>

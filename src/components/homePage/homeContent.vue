@@ -5,8 +5,7 @@
         <MenuItem name="1">
           <div id="index-link" style="padding-top:0px;">
             <div>
-              <Icon type="md-home" id="index-icon" />
-              首页
+              <Icon type="md-home" id="index-icon" />首页
             </div>
           </div>
         </MenuItem>
@@ -200,6 +199,7 @@ export default {
       carousel_speed: 4000,
       indexCoverimg: "/api/img/coverImg/timg.jpg",
       lunbodata: "",
+      loddingItem: { comic: false, game: false, music: false, learn: false },
       carouselData: [
         {
           svId: "0",
@@ -270,8 +270,9 @@ export default {
       ]
     };
   },
-  mounted: function() {
+  created: function() {
     this.getIndexUrl();
+    this.watchSY();
   },
   methods: {
     getIndexUrl() {
@@ -283,6 +284,36 @@ export default {
         url: "/api/controller/svideoCtro.php"
       }).then(res => {
         this.lunbodata = res.data;
+      });
+    },
+    lazyLoading(tags) {
+      let getData = new FormData();
+      getData.append("code", "lazyLoading");
+      getData.append('tag',tags);
+      this.$axios({
+        method: "post",
+        data: getData,
+        url: "/api/controller/loadIndex.php"
+      }).then(res => {
+        console.log(res.data);
+      });
+    },
+    watchSY() {
+      this.lazyLoading("动漫");
+      $(document).scroll(() => {
+        let top = $(document).scrollTop();
+        if (top >= 100 && top < 500 && !this.loddingItem["game"]) {
+          this.lazyLoading("游戏");
+          this.loddingItem["game"] = true;
+        }
+        if (top >= 500 && top < 1000 && !this.loddingItem["music"]) {
+          this.lazyLoading("音乐");
+          this.loddingItem["music"] = true;
+        }
+        if (top >= 1000 && !this.loddingItem["learn"]) {
+          this.lazyLoading("学习");
+          this.loddingItem["learn"] = true;
+        }
       });
     }
   }

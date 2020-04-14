@@ -17,6 +17,7 @@ import cateforyItem from "../components/categoryPage/cateforyItem"
 import search from "../views/search"
 import report from "../components/adminSystem/report"
 import videoSystemMange from "../components/adminSystem/videoSystemManage"
+import userManage from "../components/adminSystem/userManage"
 
 Vue.use(VueRouter);
 
@@ -103,7 +104,8 @@ export default new VueRouter({
     children: [
       { path: "/adminSystem/tmp_video", name: "审核视频", component: tmp_video },
       { path: "/adminSystem/report", name: "投诉稿件", component: report },
-      { path: "/adminSystem/videoSystemMange", name: "管理视频", component: videoSystemMange }
+      { path: "/adminSystem/videoSystemMange", name: "管理视频", component: videoSystemMange },
+      { path: "/adminSystem/userManage", name: "管理用户", component: userManage }
     ]
   },
   ]

@@ -11,7 +11,8 @@ module.exports = {
       hotOnly: false, //是否开启热更新
       proxy: {
         '/api': {
-            target: 'http://bysjserver:8082', //API服务器的地址
+            target: 'http://193.112.144.210:8082', //API服务器的地址
+            //target:'http://localhost:8082',
             ws: true,  //代理websockets
             changeOrigin: true, // 虚拟的站点需要更管origin
             pathRewrite: {   //重写路径 比如'/api/aaa/ccc'重写为'/aaa/ccc'
