@@ -60,12 +60,12 @@
         </Carousel>
       </div>
       <div id="first-right">
-        <Carousel id="carousel-right" dots="none" loop>
+        <Carousel id="carousel-right" dots="none">
           <CarouselItem>
             <div class="recommend-box">
               <div class="recommend-box-item" v-for="(item,index) in comic.slice(0,6)" :key="index">
                 <div class="info-box">
-                  <a href>
+                  <a :href="'/video/'+item.sv_id">
                     <img :src="'/api'+item.cover_img" alt />
                     <div class="info">
                       <p class="title">{{item.title}}</p>
@@ -87,7 +87,7 @@
             <div class="recommend-box">
               <div class="recommend-box-item" v-for="(item,index) in comic.slice(0,6)" :key="index">
                 <div class="info-box">
-                  <a href>
+                  <a :href="'/video/'+item.sv_id">
                     <img :src="'/api'+item.cover_img" alt />
                     <div class="info">
                       <p class="title">{{item.title}}</p>
@@ -109,7 +109,7 @@
             <div class="recommend-box">
               <div class="recommend-box-item" v-for="(item,index) in comic.slice(0,6)" :key="index">
                 <div class="info-box">
-                  <a href>
+                  <a :href="'/video/'+item.sv_id">
                     <img :src="'/api'+item.cover_img" alt />
                     <div class="info">
                       <p class="title">{{item.title}}</p>
@@ -131,7 +131,7 @@
             <div class="recommend-box">
               <div class="recommend-box-item" v-for="(item,index) in comic.slice(0,6)" :key="index">
                 <div class="info-box">
-                  <a href>
+                  <a :href="'/video/'+item.sv_id">
                     <img :src="'/api'+item.cover_img" alt />
                     <div class="info">
                       <p class="title">{{item.title}}</p>
