@@ -26,15 +26,6 @@
         <div class="userConfig">
           <a v-on:click="gotoUser('fans')">
             粉丝
-            <span class="text-link">111</span>
-          </a>
-          <a>
-            消息
-            <span class="text-link">2</span>
-          </a>
-          <a>
-            关注
-            <span class="text-link">10</span>
           </a>
         </div>
         <Divider style="background:rgba(0, 0, 0, .2);margin:0px 0 0 0;" />
@@ -129,7 +120,7 @@
 }
 #userLogin:hover > #userMenu {
   visibility: visible;
-  height: 280px;
+  height: 230px;
 }
 #userName {
   margin-top: 10px;

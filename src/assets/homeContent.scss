@@ -242,33 +242,51 @@
     }
   }
   .right > .card-header {
-    height: 46px;
+    height: 36px;
   }
   .right > .card-header > span {
     font-size: 18px;
     font-weight: 200;
-    padding-top: 12px;
-  }
-  .right > .card-header > button {
-    margin-left: 45%;
-    color: #d9dadd;
-    height: 26px;
-    border-color: #d9dadd;
-    margin-top: 12px;
-    &:hover {
-      color: #2d8cf0;
-      border-color: #2d8cf0;
-    }
+    padding-top: 10px;
   }
   .card-content {
     height: 404px;
     background: #17233d;
     @include boderShadow();
   }
-  .video-card-common{
+  .second-list-box{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .card-pic{
     width: 206px;
     height: 190px;
-    background: #2d8cf0;
+    overflow: hidden;
+  }
+  .card-pic> a{
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  .card-pic > a >img{
+    width: 100%;
+    height: 119px;
+    border-radius: 4px;
+    object-fit: cover;
+  }
+  .info{
+    padding: 8px;
+  }
+  .info>.card-left{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  .video-card-common{
+    margin-left: 6px;
+    margin-top: 9px;
+    @include boderShadow();
   }
   .shx {
     position: absolute;

@@ -63,17 +63,20 @@
         <Carousel id="carousel-right" dots="none" loop>
           <CarouselItem>
             <div class="recommend-box">
-              <div class="recommend-box-item" v-for="item in carouselData" v-bind:key="item.svId">
+              <div class="recommend-box-item" v-for="(item,index) in comic.slice(0,6)" :key="index">
                 <div class="info-box">
                   <a href>
-                    <img :src="item.coverImg" alt />
+                    <img :src="'/api'+item.cover_img" alt />
                     <div class="info">
-                      <p class="title">{{item.title}}}</p>
+                      <p class="title">{{item.title}}</p>
                       <div class="author">
-                        <Icon type="ios-square-outline" />
-                        {{item.author}}
+                        <Icon type="ios-square-outline" color="white" size="16" />
+                        {{item.userName}}
                       </div>
-                      <p>{{item.coutWatch}}</p>
+                      <p>
+                        <Icon type="ios-videocam-outline" color="white" size="16" />
+                        {{item.cout_watch}}
+                      </p>
                     </div>
                   </a>
                 </div>
@@ -81,13 +84,70 @@
             </div>
           </CarouselItem>
           <CarouselItem>
-            <div class="recommend-box">2</div>
+            <div class="recommend-box">
+              <div class="recommend-box-item" v-for="(item,index) in comic.slice(0,6)" :key="index">
+                <div class="info-box">
+                  <a href>
+                    <img :src="'/api'+item.cover_img" alt />
+                    <div class="info">
+                      <p class="title">{{item.title}}</p>
+                      <div class="author">
+                        <Icon type="ios-square-outline" color="white" size="16" />
+                        {{item.userName}}
+                      </div>
+                      <p>
+                        <Icon type="ios-videocam-outline" color="white" size="16" />
+                        {{item.cout_watch}}
+                      </p>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
           </CarouselItem>
           <CarouselItem>
-            <div class="recommend-box">3</div>
+            <div class="recommend-box">
+              <div class="recommend-box-item" v-for="(item,index) in comic.slice(0,6)" :key="index">
+                <div class="info-box">
+                  <a href>
+                    <img :src="'/api'+item.cover_img" alt />
+                    <div class="info">
+                      <p class="title">{{item.title}}</p>
+                      <div class="author">
+                        <Icon type="ios-square-outline" color="white" size="16" />
+                        {{item.userName}}
+                      </div>
+                      <p>
+                        <Icon type="ios-videocam-outline" color="white" size="16" />
+                        {{item.cout_watch}}
+                      </p>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
           </CarouselItem>
           <CarouselItem>
-            <div class="recommend-box">4</div>
+            <div class="recommend-box">
+              <div class="recommend-box-item" v-for="(item,index) in comic.slice(0,6)" :key="index">
+                <div class="info-box">
+                  <a href>
+                    <img :src="'/api'+item.cover_img" alt />
+                    <div class="info">
+                      <p class="title">{{item.title}}</p>
+                      <div class="author">
+                        <Icon type="ios-square-outline" color="white" size="16" />
+                        {{item.userName}}
+                      </div>
+                      <p>
+                        <Icon type="ios-videocam-outline" color="white" size="16" />
+                        {{item.cout_watch}}
+                      </p>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
           </CarouselItem>
         </Carousel>
       </div>
@@ -100,17 +160,25 @@
         </dir>
         <div class="card-content">
           <div class="second-list-box">
-            <div class="video-card-common">
+            <div class="video-card-common" v-for="(item,index) in comic" :key="index">
               <div class="card-pic">
-                <a href>
-                  <img src alt />
-                  <div class="count">
-                    <div class="card-left">
-                      <span></span>
-                      <span></span>
-                    </div>
+                <a :href="'video/'+item.sv_id">
+                  <img :src="'/api'+item.cover_img" alt />
+                  <div class="info">
                     <div class="card-right">
-                      <span></span>
+                      <span>{{item.title}}</span>
+                    </div>
+                    <div class="card-left">
+                      <span>{{item.userName}}</span>
+                      <span>
+                        <Icon
+                          type="ios-videocam-outline"
+                          color="white"
+                          size="16"
+                          style="margin:6px"
+                        />
+                        {{item.cout_watch}}
+                      </span>
                     </div>
                   </div>
                 </a>
@@ -122,12 +190,15 @@
       <div class="right">
         <div class="card-header">
           <span>排行榜</span>
-          <Button type="default" ghost>
-            更多
-            <Icon type="ios-more" />
-          </Button>
         </div>
-        <div class="card-content"></div>
+        <div class="card-content">
+          <div class="rank-item" v-for="(item,index) in comic" :key="index" style="height:42px">
+            <a :href="'/video'+item.sv_id">
+              <span style="font-size:18px;margin-right:8px;color:gray">{{index}}</span>
+              {{item.title}}
+            </a>
+          </div>
+        </div>
       </div>
     </div>
     <div class="second" id="game">
@@ -136,17 +207,47 @@
           <img src="../../assets/game_icon.png" alt />
           <a>游戏</a>
         </dir>
-        <div class="card-content"></div>
+        <div class="card-content">
+          <div class="second-list-box">
+            <div class="video-card-common" v-for="(item,index) in game" :key="index">
+              <div class="card-pic">
+                <a :href="'video/'+item.sv_id">
+                  <img :src="'/api'+item.cover_img" alt />
+                  <div class="info">
+                    <div class="card-right">
+                      <span>{{item.title}}</span>
+                    </div>
+                    <div class="card-left">
+                      <span>{{item.userName}}</span>
+                      <span>
+                        <Icon
+                          type="ios-videocam-outline"
+                          color="white"
+                          size="16"
+                          style="margin:6px"
+                        />
+                        {{item.cout_watch}}
+                      </span>
+                    </div>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="right">
         <div class="card-header">
           <span>排行榜</span>
-          <Button type="default" ghost>
-            更多
-            <Icon type="ios-more" />
-          </Button>
         </div>
-        <div class="card-content"></div>
+        <div class="card-content">
+          <div class="rank-item" v-for="(item,index) in game" :key="index" style="height:42px">
+            <a :href="'/video'+item.sv_id">
+              <span style="font-size:18px;margin-right:8px;color:gray">{{index}}</span>
+              {{item.title}}
+            </a>
+          </div>
+        </div>
       </div>
     </div>
     <div class="second" id="music">
@@ -155,17 +256,47 @@
           <img src="../../assets/music_icon.png" alt />
           <a>音乐</a>
         </dir>
-        <div class="card-content"></div>
+        <div class="card-content">
+          <div class="second-list-box">
+            <div class="video-card-common" v-for="(item,index) in music" :key="index">
+              <div class="card-pic">
+                <a :href="'video/'+item.sv_id">
+                  <img :src="'/api'+item.cover_img" alt />
+                  <div class="info">
+                    <div class="card-right">
+                      <span>{{item.title}}</span>
+                    </div>
+                    <div class="card-left">
+                      <span>{{item.userName}}</span>
+                      <span>
+                        <Icon
+                          type="ios-videocam-outline"
+                          color="white"
+                          size="16"
+                          style="margin:6px"
+                        />
+                        {{item.cout_watch}}
+                      </span>
+                    </div>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="right">
         <div class="card-header">
           <span>排行榜</span>
-          <Button type="default" ghost>
-            更多
-            <Icon type="ios-more" />
-          </Button>
         </div>
-        <div class="card-content"></div>
+        <div class="card-content">
+          <div class="rank-item" v-for="(item,index) in music" :key="index" style="height:42px">
+            <a :href="'/video'+item.sv_id">
+              <span style="font-size:18px;margin-right:8px;color:gray">{{index}}</span>
+              {{item.title}}
+            </a>
+          </div>
+        </div>
       </div>
     </div>
     <div class="second" id="learn">
@@ -174,17 +305,47 @@
           <img src="../../assets/learn_icon.png" alt />
           <a>学习</a>
         </dir>
-        <div class="card-content"></div>
+        <div class="card-content">
+          <div class="second-list-box">
+            <div class="video-card-common" v-for="(item,index) in learn" :key="index">
+              <div class="card-pic">
+                <a :href="'video/'+item.sv_id">
+                  <img :src="'/api'+item.cover_img" alt />
+                  <div class="info">
+                    <div class="card-right">
+                      <span>{{item.title}}</span>
+                    </div>
+                    <div class="card-left">
+                      <span>{{item.userName}}</span>
+                      <span>
+                        <Icon
+                          type="ios-videocam-outline"
+                          color="white"
+                          size="16"
+                          style="margin:6px"
+                        />
+                        {{item.cout_watch}}
+                      </span>
+                    </div>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="right">
         <div class="card-header">
           <span>排行榜</span>
-          <Button type="default" ghost>
-            更多
-            <Icon type="ios-more" />
-          </Button>
         </div>
-        <div class="card-content"></div>
+        <div class="card-content">
+          <div class="rank-item" v-for="(item,index) in learn" :key="index" style="height:42px">
+            <a :href="'/video'+item.sv_id">
+              <span style="font-size:18px;margin-right:8px;color:gray">{{index}}</span>
+              {{item.title}}
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -200,6 +361,10 @@ export default {
       indexCoverimg: "/api/img/coverImg/timg.jpg",
       lunbodata: "",
       loddingItem: { comic: false, game: false, music: false, learn: false },
+      comic: "",
+      game: "",
+      music: "",
+      learn: "",
       carouselData: [
         {
           svId: "0",
@@ -272,6 +437,7 @@ export default {
   },
   created: function() {
     this.getIndexUrl();
+    this.lazyLoading("动画");
     this.watchSY();
   },
   methods: {
@@ -289,17 +455,25 @@ export default {
     lazyLoading(tags) {
       let getData = new FormData();
       getData.append("code", "lazyLoading");
-      getData.append('tag',tags);
+      getData.append("tag", tags);
       this.$axios({
         method: "post",
         data: getData,
         url: "/api/controller/loadIndex.php"
       }).then(res => {
+        if (tags == "动画") {
+          this.comic = res.data;
+        } else if (tags == "游戏") {
+          this.game = res.data;
+        } else if (tags == "音乐") {
+          this.music = res.data;
+        } else {
+          this.learn = res.data;
+        }
         console.log(res.data);
       });
     },
     watchSY() {
-      this.lazyLoading("动漫");
       $(document).scroll(() => {
         let top = $(document).scrollTop();
         if (top >= 100 && top < 500 && !this.loddingItem["game"]) {
