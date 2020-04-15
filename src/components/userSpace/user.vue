@@ -119,7 +119,7 @@
 }
 .ipnutText {
   height: 28px;
-  background: rgba($color: #000000, $alpha: 0.4);
+  background: rgba($color: #ffffff, $alpha: 1);
   border: 1px solid rgba($color: #000000, $alpha: 1);
   padding: 4px;
   color: #fff;
