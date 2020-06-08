@@ -24,7 +24,7 @@ npm run lint
 
 #### 主页
 
-![image-20200608170703473](C:\Users\Haoren\AppData\Roaming\Typora\typora-user-images\image-20200608170703473.png)
+![image-20200608170703473] [122](C:\Users\Haoren\AppData\Roaming\Typora\typora-user-images\image-20200608170703473.png)
 										图1
 
 ![image-20200608163200791](C:\Users\Haoren\AppData\Roaming\Typora\typora-user-images\image-20200608163200791.png)
@@ -70,7 +70,7 @@ npm run lint
 
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
-[image-20200608163516704]:base64
+[122]:base64
 
 
 
