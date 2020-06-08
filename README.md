@@ -23,6 +23,8 @@ npm run lint
 ### 页面展示
 
 #### 主页
+
+![image-20200608170703473](C:\Users\Haoren\AppData\Roaming\Typora\typora-user-images\image-20200608170703473.png)
 										图1
 
 ![image-20200608163200791](C:\Users\Haoren\AppData\Roaming\Typora\typora-user-images\image-20200608163200791.png)
@@ -68,7 +70,9 @@ npm run lint
 
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
-[C:\Users\Haoren\AppData\Roaming\Typora\typora-user-images\image-20200608163703406.png]:base64
+[20200608170703473]:base64
+
+
 
 
 
