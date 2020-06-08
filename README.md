@@ -40,7 +40,14 @@ npm run lint
 ![image-20200608163346492](https://raw.githubusercontent.com/Haoren321/picgo/master/img/image-20200608163346492.png)
 											
 ![image-20200608163409540](https://raw.githubusercontent.com/Haoren321/picgo/master/img/image-20200608163409540.png)
-										
+
+#### 评论
+
+![image-20200608195045352](https://raw.githubusercontent.com/Haoren321/picgo/master/img/image-20200608195045352.png)										
+
+#### 搜索结果
+
+![image-20200608195147358](https://raw.githubusercontent.com/Haoren321/picgo/master/img/image-20200608195147358.png)
 
 #### 个人信息管理
 
@@ -67,6 +74,12 @@ npm run lint
 ![image-20200608163738183](https://raw.githubusercontent.com/Haoren321/picgo/master/img/image-20200608163738183.png)	
 
 ![img-23](https://raw.githubusercontent.com/Haoren321/picgo/master/img/image-20200608182023353.png)
+
+#### 其他页面
+
+![image-20200608195343018](https://cdn.jsdelivr.net/gh/Haoren321/picgo@master/img/image-20200608195343018.png)
+
+![image-20200608195403339](https://cdn.jsdelivr.net/gh/Haoren321/picgo@master/img/image-20200608195403339.png)
 
 ### Customize configuration
 
