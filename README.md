@@ -1,9 +1,7 @@
 # spwz
 
-## Project setup
-```
-npm install
-```
+## 项目的IP地址
+http://193.112.144.210:8082/Home
 
 ### Compiles and hot-reloads for development
 ```
